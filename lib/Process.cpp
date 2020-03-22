@@ -7,19 +7,21 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <cstring>
+#include <iostream>
 #include <exception>
+#include "ExceptionProcess.h"
 
 
 Process::Process(const std::string& path)
 {
 	if(pipe(inProcfd) == -1)      //pipe to get information
-		throw("Failed creating inPipe");
+		throw PipeException();
 	if(pipe(outProcfd) == -1)     //pipe to send information
-		throw("Failed creating outPipe");
+		throw PipeException();
 	
 	pid = fork();
 	if(pid == -1)
-	    throw("Error in fork");
+	    throw ForkException();
 	if(pid == 0)    //child process
 	{
 		dup2(inProcfd[0], STDIN_FILENO);

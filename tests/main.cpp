@@ -1,6 +1,8 @@
 #include "Process.h"
+#include "ExceptionProcess.h"
 
 #include <cstring>
+#include <iostream>
 #include <string>
 
 int main(int argc, char *argv[])
@@ -8,25 +10,28 @@ int main(int argc, char *argv[])
     Process* p;
     try
     {
-        p = new Process(argv[1]);
+        p = new Process("./echo.out");
     }
-    catch(std::string s)
+    catch(PipeException& e)
     {
-        std::cout << s;
+        std::cout << e.what() << std::endl;
+    }
+    catch(ForkException& e)
+    {
+        std::cout << e.what() << std::endl;
     }
 
     char send[256], get[256];
-    std::cout<<"Enter string: ";
+    int n, k;
     while(std::cin>>send)
     {
-        int retCode, n, k;
         n = p->write(&send, sizeof(send));
         if(n != 0)
         {
             k = p->read(&get, n);
             std::cout<<get<<'\n';
         }
-        std::cout<<"Enter string: ";
     }
+    p->closeStdin();
     return 0;
 }
