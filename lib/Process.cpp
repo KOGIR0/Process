@@ -7,6 +7,8 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <cstring>
+#include <exception>
+
 
 Process::Process(const std::string& path)
 {
@@ -22,14 +24,18 @@ Process::Process(const std::string& path)
 	{
 		dup2(inProcfd[0], STDIN_FILENO);
 		dup2(outProcfd[1], STDOUT_FILENO);
-		::close(inProcfd[1]);                  //close write part of getting pipe
-		::close(outProcfd[0]);                 //close read part of sending pipe
+
+		::close(inProcfd[1]);
+		::close(outProcfd[0]);
+		::close(inProcfd[1]);
+		::close(outProcfd[0]);
+
 
 		execlp(path.c_str(), path.c_str(), (char*) NULL);
 	}else  //parent procces
 	{
-		::close(inProcfd[0]);  //close read part of getting pipe
-		::close(outProcfd[1]); //close write part of sending pipe
+		::close(inProcfd[0]);
+		::close(outProcfd[1]);
 	}
 }
 
@@ -40,24 +46,17 @@ size_t Process::write(const void* data, size_t len)
 
 void Process::writeExact(const void* data, size_t len)
 {
-	size_t n_len, nwrite;
-	if(sizeof(data) < len)
-	{
-		n_len = sizeof(data);
-	}else
-	{
-		n_len = len;
-	}
+	size_t nwrite;
 
 	int flags = fcntl(inProcfd[1], F_GETFD);
 	fcntl(inProcfd[1], F_SETFD, O_NONBLOCK);
 
-	while(n_len > 0)
+	while(len > 0)
 	{
-		nwrite = ::write(inProcfd[1], data, n_len);
+		nwrite = ::write(inProcfd[1], data, len);
 		if(nwrite > 0)
 		{
-			n_len -= nwrite;
+			len -= nwrite;
 		}
 	}
 
@@ -71,27 +70,19 @@ size_t Process::read(void* data, size_t len)
 
 void Process::readExact(void* data, size_t len)
 {
-	size_t read_len, nread;
+	size_t nread;
 	void* tmp_buf;
-	char* data_read;
-	if(len > sizeof(data))
-	{
-		read_len = sizeof(data);
-	}else
-	{
-		read_len = len;
-	}
 
 	int flags = fcntl(outProcfd[0], F_GETFD);
 	fcntl(outProcfd[0], F_SETFL, O_NONBLOCK);
 	
-	while(read_len > 0)
+	while(len > 0)
 	{
-		nread = ::read(outProcfd[0], tmp_buf, read_len);
-		strcat(data_read, (char*)tmp_buf);
+		nread = ::read(outProcfd[0], tmp_buf, len);
 		if(nread > 0)
 		{
-			read_len -= nread;
+			strcat(static_cast<char*>(data),static_cast<char*>(tmp_buf));
+			len -= nread;
 		}
 	}
 
