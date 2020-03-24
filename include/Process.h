@@ -2,9 +2,6 @@
 #define PROCESS_H
 
 #include <string>
-#include <unistd.h>
-#include <fstream>
-#include <iostream>
 
 class Process
 {
@@ -22,9 +19,13 @@ public:
 
 	void close();
 
+	void createPipes(int* inProcfd, int* outProcfd);
+
 	private:
-		pid_t pid;
-		int inProcfd[2];
-		int outProcfd[2];
+
+	pid_t pid;
+	int parentToChild;
+	int childToParent;
+	bool canRead;
 };
 #endif //PROCESS_H

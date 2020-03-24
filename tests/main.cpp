@@ -5,6 +5,41 @@
 #include <iostream>
 #include <string>
 
+std::string send(Process* p, size_t* msg_size)
+{
+    std::string send;
+    try
+    {
+        std::cout << "Enter message: " << std::endl;
+        std::cin >> send;
+        *msg_size = send.size();
+        p->writeExact(msg_size, sizeof(size_t));
+        p->writeExact(send.c_str(), send.size());
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
+    return send;
+}
+
+std::string get(Process* p, size_t& msg_size)
+{
+    char buffer[256];
+    try
+    {
+        p->readExact(&msg_size, sizeof(size_t));
+        p->readExact(&buffer, msg_size);
+
+    }catch(ReadException& e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+
+    return std::string(buffer);
+}
+
 int main(int argc, char *argv[])
 {
     Process* p;
@@ -21,16 +56,15 @@ int main(int argc, char *argv[])
         std::cout << e.what() << std::endl;
     }
 
-    char send[256], get[256];
-    int n, k;
-    while(std::cin>>send)
+    while(!feof(stdin))
     {
-        n = p->write(&send, sizeof(send));
-        if(n != 0)
-        {
-            k = p->read(&get, n);
-            std::cout<<get<<'\n';
-        }
+        size_t send_msg_size;
+        std::string s_str = send(p, &send_msg_size);
+        std::cout << "Message send: " << s_str << " Message size: " << send_msg_size << std::endl;
+
+        size_t got_msg_size;
+        std::string g_str = get(p, got_msg_size);
+        std::cout << "Message got: " << g_str << " Message size: " << got_msg_size << std::endl;
     }
     p->closeStdin();
     return 0;
