@@ -52,11 +52,11 @@ void Process::closeFDs(int& fd1, int& fd2)
 void Process::createPipes(int* inProcfd, int* outProcfd)
 {
 	if(pipe(inProcfd) == -1)
-	    throw PipeException("Error creating inProcfd.");
+		throw PipeException("Error creating inProcfd.");
 	if(pipe(outProcfd) == -1)
 	{
-	    closeFDs(inProcfd[0], inProcfd[1]);
-	    throw PipeException("Error creating outProcfd.");
+		closeFDs(inProcfd[0], inProcfd[1]);
+		throw PipeException("Error creating outProcfd.");
 	}
 }
 
