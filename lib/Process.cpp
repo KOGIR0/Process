@@ -124,6 +124,8 @@ void Process::close()
 {
 	closeFDs(childToParent, parentToChild);
 	
+	canRead = false;
+	
 	kill(pid, SIGTERM);
 	waitpid(pid, NULL, WNOHANG);
 }
