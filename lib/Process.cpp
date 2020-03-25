@@ -13,13 +13,13 @@
 
 Process::Process(const std::string& path) : canRead(true)
 {
-	int inProcfd[2], outProcfd[2];
-	createPipes(inProcfd, outProcfd);
+    int inProcfd[2], outProcfd[2];
+    createPipes(inProcfd, outProcfd);
 
-	pid = fork();
-	if(pid == -1)
-	{
-		closeFDs(inProcfd[0], inProcfd[1]);
+    pid = fork();
+    if(pid == -1)
+    {
+	    closeFDs(inProcfd[0], inProcfd[1]);
 		closeFDs(outProcfd[0], outProcfd[1]);
 	    throw ForkException();
 	}
@@ -55,8 +55,8 @@ void Process::createPipes(int* inProcfd, int* outProcfd)
 	    throw PipeException("Error creating inProcfd.");
 	if(pipe(outProcfd) == -1)
 	{
-		closeFDs(inProcfd[0], inProcfd[1]);
-		throw PipeException("Error creating outProcfd.");
+	    closeFDs(inProcfd[0], inProcfd[1]);
+	    throw PipeException("Error creating outProcfd.");
 	}
 }
 
@@ -125,8 +125,7 @@ void Process::close()
 	closeFDs(childToParent, parentToChild);
 	
 	kill(pid, SIGTERM);
-	int statlock;
-	waitpid(pid, &statlock, WNOHANG);
+	waitpid(pid, NULL, WNOHANG);
 }
 
 Process::~Process()
