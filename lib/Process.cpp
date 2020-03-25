@@ -20,16 +20,16 @@ Process::Process(const std::string& path) : canRead(true)
     if(pid == -1)
     {
 	    closeFDs(inProcfd[0], inProcfd[1]);
-		closeFDs(outProcfd[0], outProcfd[1]);
+	    closeFDs(outProcfd[0], outProcfd[1]);
 	    throw ForkException();
 	}
 	if(pid == 0)
 	{
 		dup2(inProcfd[0], STDIN_FILENO);
 		dup2(outProcfd[1], STDOUT_FILENO);
-
-	    closeFDs(inProcfd[0], inProcfd[1]);
-	    closeFDs(outProcfd[0], outProcfd[1]);
+		
+		closeFDs(inProcfd[0], inProcfd[1]);
+		closeFDs(outProcfd[0], outProcfd[1]);
 
 		if(execlp(path.c_str(), path.c_str(), nullptr) == -1)
 		{
