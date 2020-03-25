@@ -13,15 +13,15 @@
 
 Process::Process(const std::string& path) : canRead(true)
 {
-    int inProcfd[2], outProcfd[2];
-    createPipes(inProcfd, outProcfd);
-
-    pid = fork();
-    if(pid == -1)
-    {
-	    closeFDs(inProcfd[0], inProcfd[1]);
-	    closeFDs(outProcfd[0], outProcfd[1]);
-	    throw ForkException();
+	int inProcfd[2], outProcfd[2];
+	createPipes(inProcfd, outProcfd);
+	
+	pid = fork();
+	if(pid == -1)
+	{
+		closeFDs(inProcfd[0], inProcfd[1]);
+		closeFDs(outProcfd[0], outProcfd[1]);
+		throw ForkException();
 	}
 	if(pid == 0)
 	{
