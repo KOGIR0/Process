@@ -6,7 +6,7 @@
 #include <string>
 #include <memory>
 
-std::string send(std::shared_ptr<Process> p, size_t* msg_size)
+std::string send(std::unique_ptr<Process>& p, size_t* msg_size)
 {
     std::string send;
     try
@@ -25,7 +25,7 @@ std::string send(std::shared_ptr<Process> p, size_t* msg_size)
     return send;
 }
 
-std::string get(std::shared_ptr<Process> p, size_t& msg_size)
+std::string get(std::unique_ptr<Process>& p, size_t& msg_size)
 {
     char buffer[256];
     try
@@ -43,10 +43,10 @@ std::string get(std::shared_ptr<Process> p, size_t& msg_size)
 
 int main(int argc, char *argv[])
 {
-    std::shared_ptr<Process> p;
+    std::unique_ptr<Process> p;
     try
     {
-        p = std::make_shared<Process>("./echo.out");
+        p = std::make_unique<Process>("./echo.out");
     }
     catch(PipeException& e)
     {
