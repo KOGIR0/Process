@@ -1,27 +1,24 @@
 #include <exception>
 #include <string>
 
-class PipeException:public std::exception
+class PipeException : public std::exception
 {
-    public:
+public:
 
-    PipeException(const char* s)
-    {
-        message = s;
-    }
+    PipeException(const char* msg) : message(msg){} 
 
     const char* what() const throw()
     {
         return message;
     }
 
-    private:
+private:
     const char* message;
 };
 
-class ForkException: public std::exception
+class ForkException : public std::exception
 {
-    public:
+public:
     
     const char* what() const throw()
     {
@@ -29,9 +26,9 @@ class ForkException: public std::exception
     }
 };
 
-class WriteException: public std::exception
+class WriteException : public std::exception
 {
-    public:
+public:
 
     const char* what() const throw()
     {
@@ -39,12 +36,22 @@ class WriteException: public std::exception
     }
 };
 
-class ReadException: public std::exception
+class ReadException : public std::exception
 {
-    public:
+public:
 
     const char* what() const throw()
     {
         return "Error reading";
+    }
+};
+
+class ExecException : public std::exception
+{
+public:
+    
+    const char* what() const throw()
+    {
+        return "Error executing.";
     }
 };

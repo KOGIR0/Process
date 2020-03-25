@@ -4,8 +4,9 @@
 #include <cstring>
 #include <iostream>
 #include <string>
+#include <memory>
 
-std::string send(Process* p, size_t* msg_size)
+std::string send(std::shared_ptr<Process> p, size_t* msg_size)
 {
     std::string send;
     try
@@ -24,7 +25,7 @@ std::string send(Process* p, size_t* msg_size)
     return send;
 }
 
-std::string get(Process* p, size_t& msg_size)
+std::string get(std::shared_ptr<Process> p, size_t& msg_size)
 {
     char buffer[256];
     try
@@ -42,16 +43,20 @@ std::string get(Process* p, size_t& msg_size)
 
 int main(int argc, char *argv[])
 {
-    Process* p;
+    std::shared_ptr<Process> p;
     try
     {
-        p = new Process("./echo.out");
+        p = std::make_shared<Process>("./echo.out");
     }
     catch(PipeException& e)
     {
         std::cout << e.what() << std::endl;
     }
     catch(ForkException& e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+    catch(ExecException& e)
     {
         std::cout << e.what() << std::endl;
     }

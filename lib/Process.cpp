@@ -11,43 +11,52 @@
 #include <exception>
 #include "ExceptionProcess.h"
 
-Process::Process(const std::string& path):canRead(true)
+Process::Process(const std::string& path) : canRead(true)
 {
 	int inProcfd[2], outProcfd[2];
 	createPipes(inProcfd, outProcfd);
 
 	pid = fork();
 	if(pid == -1)
+	{
+		closeFDs(inProcfd[0], inProcfd[1]);
+		closeFDs(outProcfd[0], outProcfd[1]);
 	    throw ForkException();
+	}
 	if(pid == 0)
 	{
 		dup2(inProcfd[0], STDIN_FILENO);
 		dup2(outProcfd[1], STDOUT_FILENO);
 
-		::close(inProcfd[1]);
-		::close(outProcfd[0]);
-		::close(inProcfd[1]);
-		::close(outProcfd[0]);
+		closeFDs(inProcfd[0], inProcfd[1]);
+		closeFDs(outProcfd[0], outProcfd[1]);
 
-		execlp(path.c_str(), path.c_str(), nullptr);
+		if(execlp(path.c_str(), path.c_str(), nullptr) == -1)
+		{
+			throw ExecException();
+		}
 	}else
 	{
 		parentToChild = inProcfd[1];
 		childToParent = outProcfd[0];
-		::close(inProcfd[0]);
-		::close(outProcfd[1]);
+		closeFDs(inProcfd[0], outProcfd[1]);
 	}
+}
+
+void Process::closeFDs(int& fd1, int& fd2)
+{
+	::close(fd1);
+	::close(fd1);
 }
 
 void Process::createPipes(int* inProcfd, int* outProcfd)
 {
 	if(pipe(inProcfd) == -1)
-	    throw PipeException("Error creating inPipe.");
+	    throw PipeException("Error creating inProcfd.");
 	if(pipe(outProcfd) == -1)
 	{
-		::close(inProcfd[0]);
-		::close(inProcfd[1]);
-		throw PipeException("Error creating outPipe.");
+		closeFDs(inProcfd[0], inProcfd[1]);
+		throw PipeException("Error creating outProcfd.");
 	}
 }
 
@@ -113,15 +122,14 @@ void Process::closeStdin()
 
 void Process::close()
 {
-	::close(childToParent);
-	::close(parentToChild);
-
+	closeFDs(childToParent, parentToChild);
+	
 	kill(pid, SIGTERM);
+	int statlock;
+	waitpid(pid, &statlock, WNOHANG);
 }
 
 Process::~Process()
 {
 	close();
-	int statlock;
-	waitpid(pid, &statlock, WNOHANG);
 }
