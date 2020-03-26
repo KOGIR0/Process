@@ -5,15 +5,15 @@ class PipeException : public std::exception
 {
 public:
 
-    PipeException(const char* msg) : message(msg){} 
+    PipeException(const std::string msg) : message(msg){} 
 
     const char* what() const throw()
     {
-        return message;
+        return message.c_str();
     }
 
 private:
-    const char* message;
+    std::string message;
 };
 
 class ForkException : public std::exception
