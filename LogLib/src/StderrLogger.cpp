@@ -1,11 +1,11 @@
 #include "StderrLogger.h"
 
-void StderrLogger::class_log(const std::string& msg)
+void log::StderrLogger::class_log(const std::string& msg)
 {
     std::cerr << msg << std::endl;
 }
 
-void StderrLogger::flush()
+void log::StderrLogger::flush()
 {
     std::cerr.flush();
 }

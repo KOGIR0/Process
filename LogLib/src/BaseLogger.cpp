@@ -1,38 +1,38 @@
 #include "BaseLogger.h"
 
-BaseLogger::BaseLogger(const Level& l) : level_(l){}
+log::BaseLogger::BaseLogger(const lvl::Level& l) : level_(l){}
 
-void BaseLogger::debug(const std::string& msg)
+void log::BaseLogger::debug(const std::string& msg)
 {
-    log(msg, Level::DEBUG);
+    log(msg, lvl::Level::DEBUG);
 }
 
-void BaseLogger::info(const std::string& msg)
+void log::BaseLogger::info(const std::string& msg)
 {
-    log(msg, Level::INFO);
+    log(msg, lvl::Level::INFO);
 }
 
-void BaseLogger::warn(const std::string& msg)
+void log::BaseLogger::warn(const std::string& msg)
 {
-    log(msg, Level::WARNING);
+    log(msg, lvl::Level::WARNING);
 }
 
-void BaseLogger::error(const std::string& msg)
+void log::BaseLogger::error(const std::string& msg)
 {
-    log(msg, Level::ERROR);
+    log(msg, lvl::Level::ERROR);
 }
 
-void BaseLogger::set_level(const Level& l)
+void log::BaseLogger::set_level(const lvl::Level& l)
 {
     level_ = l;
 }
 
-Level BaseLogger::level()
+lvl::Level log::BaseLogger::level()
 {
     return level_;
 }
 
-void BaseLogger::log(const std::string& msg, const Level& l)
+void log::BaseLogger::log(const std::string& msg, const lvl::Level& l)
 {
     if(level_ > l)
     {

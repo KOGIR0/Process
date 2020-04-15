@@ -1,17 +1,12 @@
 #include "FileLogger.h"
 
 
-void FileLogger::class_log(const std::string& msg)
+void log::FileLogger::class_log(const std::string& msg)
 {
     logFile << msg << std::endl;
 }
 
-void FileLogger::flush()
+void log::FileLogger::flush()
 {
     logFile.flush();
-}
-
-FileLogger::~FileLogger()
-{
-    logFile.close();
 }

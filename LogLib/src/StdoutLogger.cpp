@@ -1,11 +1,11 @@
 #include "StdoutLogger.h"
 
-void StdoutLogger::class_log(const std::string& msg)
+void log::StdoutLogger::class_log(const std::string& msg)
 {
     std::cout << msg << std::endl;
 }
 
-void flush()
+void log::StdoutLogger::flush()
 {
     std::cout.flush();
 }

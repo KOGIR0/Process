@@ -1,13 +1,15 @@
 #include "BaseLogger.h"
 #include <iostream>
 
-class StdoutLogger : public BaseLogger
+namespace log
 {
-public:
-    StdoutLogger(const Level& l) : BaseLogger(l) {}
+    class StdoutLogger : public BaseLogger
+    {
+    public:
+        StdoutLogger(const lvl::Level& l) : BaseLogger(l) {}
+        void flush() override;
 
-    virtual void class_log(const std::string& msg);
-    virtual void flush(){};
-
-    ~StdoutLogger(){}
-};
+    private:
+        void class_log(const std::string& msg) override;
+    };
+}

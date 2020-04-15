@@ -3,16 +3,16 @@
 #include <string>
 #include <fstream>
 
-class FileLogger : public BaseLogger
+namespace log
 {
-public:    
-    FileLogger(const std::string& filename, Level l) : logFile(filename), BaseLogger(l){};
+    class FileLogger : public BaseLogger
+    {
+    public:    
+        FileLogger(const std::string& filename, lvl::Level l) : logFile(filename), BaseLogger(l){};
+        void flush() override;
 
-    void class_log(const std::string& msg);
-    void flush();
-
-    ~FileLogger();
-
-private:
-    std::ofstream logFile;
-};
+    private:
+        std::ofstream logFile;
+        void class_log(const std::string& msg) override;
+    };
+}

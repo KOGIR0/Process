@@ -1,12 +1,15 @@
 #ifndef LEVEL
 #define LEVEL
 
-enum Level
+namespace lvl
 {
-    DEBUG,
-    INFO,
-    WARNING,
-    ERROR,
-};
+    enum class Level
+    {
+        DEBUG,
+        INFO,
+        WARNING,
+        ERROR,
+    };
+}
 
 #endif  //LEVEL
