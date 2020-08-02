@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.10)
+
+add_library(BaseLogger ./src/BaseLogger.cpp ./include/Level.h)
+target_include_directories(BaseLogger PRIVATE ./include)
+add_library(FileLogger ./src/FileLogger.cpp ./include/Level.h)
+target_include_directories(FileLogger PRIVATE ./include)
+add_library(StderrLogger ./src/StderrLogger.cpp ./include/Level.h)
+target_include_directories(StderrLogger PRIVATE ./include)
+add_library(StdoutLogger ./src/StdoutLogger.cpp ./include/Level.h)
+target_include_directories(StdoutLogger PRIVATE ./include)

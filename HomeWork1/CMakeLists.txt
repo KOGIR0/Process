@@ -1,14 +1,9 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_BUILD_TYPE Debug)
+project(Test)
 
-project(Homework1)
+add_executable(Test tests/main.cpp)
 
-include_directories(include)
+add_subdirectory(LogLib)
 
-add_library(Process STATIC lib/Process.cpp)
-
-add_executable(main tests/main.cpp)
-
-target_link_libraries(main Process)
-
+target_link_libraries(Test LogLib)

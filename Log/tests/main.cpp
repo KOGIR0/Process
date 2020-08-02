@@ -6,35 +6,35 @@
 
 int main()
 {
-    log::StdoutLogger l(lvl::Level::DEBUG);
+    StdoutLogger l(Level::DEBUG);
     l.debug("stdout logger debug message.");
     l.info("stdout logger info message.");
     l.warn("stdout logger warning message.");
     l.error("stdout logger error message.");
 
-    log::FileLogger fl("logfile.txt", lvl::Level::DEBUG);
+    FileLogger fl("logfile.txt", Level::DEBUG);
     fl.debug("file logger debug message.");
     fl.info("file logger info message.");
     fl.warn("file logger warning message.");
     fl.error("file logger error message.");
 
-    log::StderrLogger el(lvl::Level::DEBUG);
+    StderrLogger el(Level::DEBUG);
     el.debug("stderror logger debug message.");
     el.info("stderror logger info message.");
     el.warn("stderror  logger warning message.");
     el.error("stderror logger error message.");
 
-    fl.set_level(lvl::Level::INFO);
-    fl.debug("file logger debug message.(Level: info)");
-    fl.info("file logger info message.(Level: info)");
-    fl.warn("file logger warning message.(Level: info)");
-    fl.error("file logger error message.(Level: info)");
+    fl.set_level(Level::INFO);
+    fl.debug("file logger debug message.(Level info)");
+    fl.info("file logger info message.(Level info");
+    fl.warn("file logger warning message.(Level info)");
+    fl.error("file logger error message.(Level info)");
 
-    l.set_level(lvl::Level::ERROR);
-    l.debug("stdout logger debug message.(Level: error)");
-    l.info("stdout logger info message.(Level: error)");
-    l.warn("stdout logger warning message.(Level: error)");
-    l.error("stdout logger error message.(Level: error)");
+    l.set_level(Level::ERROR);
+    l.debug("stdout logger debug message.(Level error)");
+    l.info("stdout logger info message.(Level error)");
+    l.warn("stdout logger warning message.(Level error)");
+    l.error("stdout logger error message.(Level error)");
 
     return 0;
 }
